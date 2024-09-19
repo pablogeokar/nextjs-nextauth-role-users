@@ -26,8 +26,6 @@ export const auth: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        console.log("credentials", credentials);
-
         const user: User = {
           id: "1",
           name: "Pablo George",

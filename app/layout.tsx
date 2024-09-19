@@ -1,5 +1,6 @@
 import NavBar from "@/components/nav-bar";
 import "./globals.css";
+import AuthProvider from "@/components/providers/auth-provider";
 
 export default function RootLayout({
   children,
@@ -10,9 +11,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="dark">
         <NavBar />
-        <main className="grid h-screen w-screen place-content-center">
-          {children}
-        </main>
+        <AuthProvider>
+          <main className="grid h-screen w-screen place-content-center">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );
