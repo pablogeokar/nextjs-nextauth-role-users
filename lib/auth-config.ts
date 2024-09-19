@@ -1,7 +1,6 @@
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions, User } from "next-auth";
-import { use } from "react";
 
 export const auth: NextAuthOptions = {
   providers: [
@@ -21,11 +20,13 @@ export const auth: NextAuthOptions = {
         domain: {
           label: "Domain",
           type: "text",
-          placeholder: "ADMINET",
-          value: "ADMINET",
+          placeholder: "ADMINNET",
+          value: "ADMINNET",
         },
       },
       async authorize(credentials, req) {
+        console.log("authorize(credentials)");
+
         const user: User = {
           id: "1",
           name: "Pablo George",
@@ -42,4 +43,39 @@ export const auth: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      // console.log("jwt(params)");
+      // console.log("Token", token);
+      // console.log("User", user);
+      // console.log("jwt(params) - End call");
+
+      let domain: string;
+
+      if (user) {
+        domain = user.domain || "default";
+
+        if (domain === "ADMINNET") {
+          token.role = "admin";
+          token.domain = domain;
+        } else {
+          token.role = "default";
+          token.domain = domain;
+        }
+      }
+
+      return token;
+    },
+    session({ session, token }) {
+      // console.log("session(params)");
+      // console.log("Token", token);
+      // console.log("User", session);
+      // console.log("session(params) - End call");
+
+      session.user.role = token.role;
+      session.user.domain = token.domain;
+
+      return session;
+    },
+  },
 };
